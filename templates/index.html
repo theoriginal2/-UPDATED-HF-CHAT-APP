@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="HF Chat - ChatGPT Style AI Assistant">
+
+    <title>HF Chat</title>
+
+    <!-- Google Font -->
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <!-- Remix Icons -->
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+          rel="stylesheet">
+
+    <!-- Highlight.js -->
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+
+    <!-- Main CSS -->
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ==========================================
+         SIDEBAR
+    =========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-header">
+
+            <div class="logo">
+
+                <div class="logo-icon">
+
+                    🤖
+
+                </div>
+
+                <div class="logo-info">
+
+                    <h2>HF Chat</h2>
+
+                    <span>Powered by Hugging Face</span>
+
+                </div>
+
+            </div>
+
+            <button
+                id="newChatBtn"
+                class="new-chat-btn">
+
+                <i class="ri-add-line"></i>
+
+                <span>New Chat</span>
+
+            </button>
+
+        </div>
+
+        <!-- Conversation History -->
+
+        <div
+            id="conversationList"
+            class="conversation-list">
+
+        </div>
+
+        <div class="sidebar-footer">
+
+            <button
+                id="themeBtn"
+                class="sidebar-btn">
+
+                <i class="ri-moon-line"></i>
+
+                Theme
+
+            </button>
+
+            <button
+                id="clearBtn"
+                class="sidebar-btn">
+
+                <i class="ri-delete-bin-line"></i>
+
+                Clear
+
+            </button>
+
+        </div>
+
+    </aside>
+
+    <!-- ==========================================
+         MAIN
+    =========================================== -->
+
+    <main class="chat-container">
+
+        <!-- HEADER -->
+
+        <header class="topbar">
+
+            <div class="model-info">
+
+                <h3>
+
+                    Qwen 2.5 7B
+
+                </h3>
+
+                <span>
+
+                    Connected
+
+                </span>
+
+            </div>
+
+            <div class="top-actions">
+
+                <button
+                    id="settingsBtn"
+                    class="icon-btn">
+
+                    <i class="ri-settings-3-line"></i>
+
+                </button>
+
+                <button
+                    id="exportBtn"
+                    class="icon-btn">
+
+                    <i class="ri-download-line"></i>
+
+                </button>
+
+            </div>
+
+        </header>
+
+        <!-- Welcome Screen -->
+
+        <section
+            id="welcomeScreen"
+            class="welcome-screen">
+
+            <div class="hero">
+
+                <div class="hero-icon">
+
+                    🤖
+
+                </div>
+
+                <h1>
+
+                    Welcome to HF Chat
+
+                </h1>
+
+                <p>
+
+                    Your AI assistant powered by Hugging Face.
+
+                </p>
+
+            </div>
+
+            <div class="prompt-grid">
+
+                <button class="prompt-card">
+
+                    <i class="ri-code-box-line"></i>
+
+                    <span>
+
+                        Write Python Code
+
+                    </span>
+
+                </button>
+
+                <button class="prompt-card">
+
+                    <i class="ri-bug-line"></i>
+
+                    <span>
+
+                        Debug my Code
+
+                    </span>
+
+                </button>
+
+                <button class="prompt-card">
+
+                    <i class="ri-book-open-line"></i>
+
+                    <span>
+
+                        Explain a Concept
+
+                    </span>
+
+                </button>
+
+                <button class="prompt-card">
+
+                    <i class="ri-file-text-line"></i>
+
+                    <span>
+
+                        Summarize Text
+
+                    </span>
+
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- Chat Messages -->
+
+        <section
+            id="chatArea"
+            class="chat-area">
+
+        </section>
+
+        <!-- ==========================================
+             TYPING INDICATOR
+        =========================================== -->
+
+        <div id="typingIndicator"
+             class="typing hidden">
+
+            <div class="typing-avatar">
+
+                🤖
+
+            </div>
+
+            <div class="typing-content">
+
+                <span class="typing-label">
+
+                    AI is thinking...
+
+                </span>
+
+                <div class="typing-dots">
+
+                    <span></span>
+
+                    <span></span>
+
+                    <span></span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ==========================================
+             SCROLL BUTTON
+        =========================================== -->
+
+        <button id="scrollBottomBtn"
+                class="scroll-bottom hidden"
+                title="Scroll to latest message">
+
+            <i class="ri-arrow-down-line"></i>
+
+        </button>
+
+        <!-- ==========================================
+             MESSAGE TEMPLATE
+        =========================================== -->
+
+        <template id="messageTemplate">
+
+            <div class="message">
+
+                <div class="avatar">
+
+                </div>
+
+                <div class="message-wrapper">
+
+                    <div class="message-header">
+
+                        <span class="sender">
+
+                        </span>
+
+                        <span class="timestamp">
+
+                        </span>
+
+                    </div>
+
+                    <div class="message-body">
+
+                    </div>
+
+                    <div class="message-toolbar">
+
+                        <button
+                            class="toolbar-btn copy-btn"
+                            title="Copy message">
+
+                            <i class="ri-file-copy-line"></i>
+
+                        </button>
+
+                        <button
+                            class="toolbar-btn regenerate-btn"
+                            title="Regenerate">
+
+                            <i class="ri-refresh-line"></i>
+
+                        </button>
+
+                        <button
+                            class="toolbar-btn like-btn"
+                            title="Like">
+
+                            <i class="ri-thumb-up-line"></i>
+
+                        </button>
+
+                        <button
+                            class="toolbar-btn dislike-btn"
+                            title="Dislike">
+
+                            <i class="ri-thumb-down-line"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </template>
+
+        <!-- ==========================================
+             COMPOSER
+        =========================================== -->
+
+        <section class="composer">
+
+            <div class="composer-container">
+
+                <button
+                    id="attachBtn"
+                    class="composer-btn"
+                    title="Attachments">
+
+                    <i class="ri-attachment-2"></i>
+
+                </button>
+
+                <textarea
+
+                    id="messageInput"
+
+                    rows="1"
+
+                    autocomplete="off"
+
+                    spellcheck="true"
+
+                    placeholder="Message HF Chat..."></textarea>
+
+                <button
+
+                    id="voiceBtn"
+
+                    class="composer-btn"
+
+                    title="Voice input">
+
+                    <i class="ri-mic-line"></i>
+
+                </button>
+
+                <button
+
+                    id="sendBtn"
+
+                    class="send-btn"
+
+                    title="Send">
+
+                    <i class="ri-send-plane-fill"></i>
+
+                </button>
+
+            </div>
+
+            <div class="composer-footer">
+
+                <span>
+
+                    Press <strong>Enter</strong> to send
+
+                </span>
+
+                <span>
+
+                    Shift + Enter for a new line
+
+                </span>
+
+            </div>
+
+        </section>
+
+    </main>
+
+        <!-- ==========================================
+             EXPORT MODAL
+        =========================================== -->
+
+        <div id="exportModal"
+             class="modal hidden">
+
+            <div class="modal-card">
+
+                <div class="modal-header">
+
+                    <h2>
+
+                        Export Conversation
+
+                    </h2>
+
+                    <button
+                        id="closeExportBtn"
+                        class="modal-close">
+
+                        <i class="ri-close-line"></i>
+
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <button
+                        id="exportTxt"
+                        class="modal-action">
+
+                        <i class="ri-file-text-line"></i>
+
+                        Export as TXT
+
+                    </button>
+
+                    <button
+                        id="exportMd"
+                        class="modal-action">
+
+                        <i class="ri-markdown-line"></i>
+
+                        Export as Markdown
+
+                    </button>
+
+                    <button
+                        id="exportJson"
+                        class="modal-action">
+
+                        <i class="ri-braces-line"></i>
+
+                        Export as JSON
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ==========================================
+             SETTINGS MODAL
+        =========================================== -->
+
+        <div id="settingsModal"
+             class="modal hidden">
+
+            <div class="modal-card">
+
+                <div class="modal-header">
+
+                    <h2>
+
+                        Settings
+
+                    </h2>
+
+                    <button
+                        id="closeSettingsBtn"
+                        class="modal-close">
+
+                        <i class="ri-close-line"></i>
+
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="setting-item">
+
+                        <label for="themeSelect">
+
+                            Theme
+
+                        </label>
+
+                        <select id="themeSelect">
+
+                            <option value="dark">
+
+                                Dark
+
+                            </option>
+
+                            <option value="light">
+
+                                Light
+
+                            </option>
+
+                            <option value="system">
+
+                                System
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="setting-item">
+
+                        <label>
+
+                            <input
+                                id="saveHistoryToggle"
+                                type="checkbox"
+                                checked>
+
+                            Save conversation history
+
+                        </label>
+
+                    </div>
+
+                    <div class="setting-item">
+
+                        <label>
+
+                            <input
+                                id="animationsToggle"
+                                type="checkbox"
+                                checked>
+
+                            Enable animations
+
+                        </label>
+
+                    </div>
+
+                    <div class="setting-item">
+
+                        <label for="fontSizeSelect">
+
+                            Font Size
+
+                        </label>
+
+                        <select id="fontSizeSelect">
+
+                            <option value="14">
+
+                                Small
+
+                            </option>
+
+                            <option
+                                value="16"
+                                selected>
+
+                                Medium
+
+                            </option>
+
+                            <option value="18">
+
+                                Large
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ==========================================
+             IMAGE PREVIEW
+        =========================================== -->
+
+        <div id="imagePreview"
+             class="image-preview hidden">
+
+            <button
+                id="closeImagePreview"
+                class="image-close">
+
+                <i class="ri-close-line"></i>
+
+            </button>
+
+            <img
+                id="previewImage"
+                src=""
+                alt="Preview">
+
+        </div>
+
+        <!-- ==========================================
+             TOAST CONTAINER
+        =========================================== -->
+
+        <div id="toastContainer">
+
+        </div>
+
+        <!-- ==========================================
+             LOADING OVERLAY
+        =========================================== -->
+
+        <div id="loadingOverlay"
+             class="loading-overlay hidden">
+
+            <div class="loading-card">
+
+                <div class="spinner">
+
+                </div>
+
+                <p>
+
+                    Connecting to AI...
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- ==========================================
+             FOOTER
+        =========================================== -->
+
+        <footer class="app-footer">
+
+            <p>
+
+                HF Chat can make mistakes. Always verify important information.
+
+            </p>
+
+        </footer>
+
+    </div>
+
+    <!-- END APP -->
+
+    <!-- ==========================================
+         JAVASCRIPT LIBRARIES
+    =========================================== -->
+
+    <!-- Marked.js (Markdown Parser) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+
+    <!-- Highlight Languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/python.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/javascript.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/java.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/cpp.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/bash.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/json.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/xml.min.js"></script>
+
+    <!-- ==========================================
+         APPLICATION CONFIGURATION
+    =========================================== -->
+
+    <script>
+
+        window.HF_CHAT_CONFIG = {
+
+            appName: "HF Chat",
+
+            model: "Qwen/Qwen2.5-7B-Instruct",
+
+            apiEndpoint: "/chat",
+
+            version: "2.0.0",
+
+            enableMarkdown: true,
+
+            enableSyntaxHighlighting: true,
+
+            enableSpeechRecognition: true,
+
+            enableSpeechSynthesis: true,
+
+            autoScroll: true,
+
+            rememberConversation: true,
+
+            animationDuration: 250
+
+        };
+
+    </script>
+
+    <!-- ==========================================
+         INITIALIZE HIGHLIGHT.JS
+    =========================================== -->
+
+    <script>
+
+        if (window.hljs) {
+
+            hljs.configure({
+
+                ignoreUnescapedHTML: true
+
+            });
+
+        }
+
+    </script>
+
+    <!-- ==========================================
+         PREFERS COLOR SCHEME
+    =========================================== -->
+
+    <script>
+
+        (function () {
+
+            const savedTheme = localStorage.getItem("hf_chat_theme");
+
+            if (!savedTheme || savedTheme === "system") {
+
+                if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+
+                    document.body.classList.add("light");
+
+                }
+
+            }
+
+        })();
+
+    </script>
+
+    <!-- ==========================================
+         MAIN APPLICATION
+    =========================================== -->
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+    <!-- ==========================================
+         APPLICATION STARTUP
+    =========================================== -->
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            console.log(
+                `${window.HF_CHAT_CONFIG.appName} v${window.HF_CHAT_CONFIG.version} loaded.`
+            );
+
+        });
+
+    </script>
+
+    <!-- ==========================================
+         BROWSER COMPATIBILITY
+    =========================================== -->
+
+    <script>
+
+        (function () {
+
+            const supported =
+
+                "fetch" in window &&
+                "Promise" in window &&
+                "localStorage" in window;
+
+            if (!supported) {
+
+                document.body.innerHTML = `
+
+                    <div style="
+                        display:flex;
+                        justify-content:center;
+                        align-items:center;
+                        height:100vh;
+                        background:#111827;
+                        color:#ffffff;
+                        font-family:Inter,sans-serif;
+                        text-align:center;
+                        padding:30px;
+                    ">
+
+                        <div>
+
+                            <h1>
+
+                                Browser Not Supported
+
+                            </h1>
+
+                            <p>
+
+                                Please update your browser to use HF Chat.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+
+        })();
+
+    </script>
+
+    <!-- ==========================================
+         KEYBOARD SHORTCUTS
+    =========================================== -->
+
+    <script>
+
+        document.addEventListener("keydown", function (e) {
+
+            if (e.ctrlKey && e.key === "/") {
+
+                e.preventDefault();
+
+                alert(
+`Keyboard Shortcuts
+
+Enter → Send message
+Shift + Enter → New line
+Ctrl + L → New Chat
+Ctrl + / → Show shortcuts`
+                );
+
+            }
+
+        });
+
+    </script>
+
+    <!-- ==========================================
+         NOSCRIPT
+    =========================================== -->
+
+    <noscript>
+
+        <div style="
+            position:fixed;
+            inset:0;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:#0f172a;
+            color:white;
+            font-family:Inter,sans-serif;
+            z-index:9999;
+        ">
+
+            JavaScript is required to use HF Chat.
+
+        </div>
+
+    </noscript>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
