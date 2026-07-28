@@ -2272,3 +2272,257 @@ body.light .message-body code{
     animation:fadeIn .25s ease;
 
 }
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width:768px){
+
+    .modal-card{
+
+        width:95%;
+
+    }
+
+    #toastContainer{
+
+        left:12px;
+
+        right:12px;
+
+        top:12px;
+
+    }
+
+    .toast{
+
+        min-width:auto;
+
+        width:100%;
+
+    }
+
+}
+
+/* ==========================================================
+   MOBILE SIDEBAR
+========================================================== */
+
+.mobile-menu-btn{
+
+    display:none;
+
+}
+
+@media (max-width:900px){
+
+    .sidebar{
+
+        position:fixed;
+
+        left:-280px;
+
+        top:0;
+
+        width:280px;
+
+        height:100vh;
+
+        z-index:1200;
+
+        transition:left .3s ease;
+
+    }
+
+    .sidebar.open{
+
+        left:0;
+
+    }
+
+    .chat-container{
+
+        width:100%;
+
+    }
+
+    .mobile-menu-btn{
+
+        display:flex;
+
+    }
+
+}
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width:600px){
+
+    .topbar{
+
+        height:64px;
+
+    }
+
+    .model-info h3{
+
+        font-size:15px;
+
+    }
+
+    .model-info span{
+
+        font-size:12px;
+
+    }
+
+    .message{
+
+        gap:12px;
+
+    }
+
+    .message-wrapper{
+
+        max-width:95%;
+
+    }
+
+    .message-body{
+
+        font-size:14px;
+
+        line-height:1.7;
+
+    }
+
+}
+
+/* ==========================================================
+   LANDSCAPE
+========================================================== */
+
+@media (max-height:600px){
+
+    .welcome-screen{
+
+        justify-content:flex-start;
+
+        padding-top:40px;
+
+    }
+
+}
+
+/* ==========================================================
+   FOCUS STATES
+========================================================== */
+
+button:focus-visible,
+
+textarea:focus-visible,
+
+select:focus-visible{
+
+    outline:3px solid rgba(37,99,235,.35);
+
+    outline-offset:3px;
+
+}
+
+/* ==========================================================
+   DISABLED
+========================================================== */
+
+button:disabled{
+
+    opacity:.6;
+
+    cursor:not-allowed;
+
+}
+
+/* ==========================================================
+   SELECTION
+========================================================== */
+
+::selection{
+
+    background:#2563eb;
+
+    color:#ffffff;
+
+}
+
+/* ==========================================================
+   REDUCED MOTION
+========================================================== */
+
+@media (prefers-reduced-motion:reduce){
+
+    *{
+
+        animation:none !important;
+
+        transition:none !important;
+
+        scroll-behavior:auto !important;
+
+    }
+
+}
+
+/* ==========================================================
+   PRINT
+========================================================== */
+
+@media print{
+
+    .sidebar,
+
+    .composer,
+
+    .topbar,
+
+    .message-toolbar,
+
+    .scroll-bottom,
+
+    .typing,
+
+    .app-footer{
+
+        display:none !important;
+
+    }
+
+    body{
+
+        background:#ffffff;
+
+        color:#000000;
+
+    }
+
+    .chat-container{
+
+        width:100%;
+
+    }
+
+    .message{
+
+        break-inside:avoid;
+
+        page-break-inside:avoid;
+
+    }
+
+}
+
+/* ==========================================================
+   END OF FILE
+========================================================== */
