@@ -2862,4 +2862,165 @@ window.addEventListener(
 
 );
 
+/* ==========================================================
+   FINAL INITIALIZATION OVERRIDE
+========================================================== */
 
+
+function initializeApp(){
+
+
+    try{
+
+
+        loadTheme();
+
+
+        loadConversation();
+
+
+        setupEvents();
+
+
+        setupModalEvents();
+
+
+        setupVoiceInput();
+
+
+        setupImagePreview();
+
+
+        setupAttachments();
+
+
+        setupMobileMenu();
+
+
+        setupSettings();
+
+
+        setupPromptCards();
+
+
+        setupOutsideModalClose();
+
+
+        setupKeyboardShortcuts();
+
+
+        updateModelName();
+
+
+        autoResize();
+
+
+        scrollToBottom();
+
+
+
+        console.log(
+
+            "HF Chat initialized successfully"
+
+        );
+
+
+    }
+
+    catch(error){
+
+
+        console.error(
+
+            "Initialization error:",
+
+            error
+
+        );
+
+
+
+        showToast(
+
+            "Some features failed to load",
+
+            "error"
+
+        );
+
+
+    }
+
+
+}
+
+
+
+/* ==========================================================
+   GLOBAL ERROR HANDLING
+========================================================== */
+
+
+window.addEventListener(
+
+    "error",
+
+    function(event){
+
+
+        console.error(
+
+            "Frontend error:",
+
+            event.error
+
+        );
+
+
+    }
+
+);
+
+
+
+window.addEventListener(
+
+    "unhandledrejection",
+
+    function(event){
+
+
+        console.error(
+
+            "Promise error:",
+
+            event.reason
+
+        );
+
+
+    }
+
+);
+
+
+
+/* ==========================================================
+   START APPLICATION
+========================================================== */
+
+
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    ()=>{
+
+
+        initializeApp();
+
+
+    }
+
+);
